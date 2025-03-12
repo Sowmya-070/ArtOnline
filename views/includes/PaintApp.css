@@ -25,6 +25,9 @@ body {
   background: linear-gradient(red, blue);
 }
 
+
+
+
 .container {
   display: flex;
   width: 100%;

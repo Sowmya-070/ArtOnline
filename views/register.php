@@ -16,16 +16,21 @@
                     <form method="post" action="../controllers/auth.php">
                         <div class="input-group mb-3">
                             <span class="input-group-text"><i data-feather="user"></i></span>
-                            <input type="text" name="name" class="form-control" placeholder="User Name" required>
+                            <input type="text" name="name" class="form-control" placeholder="Full Name" required>
                         </div>
                         <div class="input-group mb-3">
                             <span class="input-group-text"><i data-feather="mail"></i></span>
                             <input type="email" name="email" class="form-control" placeholder="Email" required>
                         </div>
                         <div class="input-group mb-4">
-                            <span class="input-group-text"><i data-feather="lock"></i></span>
-                            <input type="password" name="password" class="form-control" placeholder="Password" required>
-                        </div>
+    <span class="input-group-text"><i data-feather="lock"></i></span>
+    <input type="password" id="password" name="password" class="form-control"
+           placeholder="Password" required
+           pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+           title="Password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 8 characters long.">
+</div>
+<small class="text-danger" id="passwordError" style="display:none;">Password must contain at least one uppercase, one lowercase, one number, one special character, and be at least 8 characters long.</small>
+
                         <div class="input-group mb-4">
                             <span class="input-group-text"><i data-feather="briefcase"></i></span>
                             <select name="role" class="form-control" required>
@@ -46,5 +51,23 @@
     <script src="../assets/js/fonts/custom-font.js"></script>
     <script src="../assets/js/pcoded.js"></script>
     <script src="../assets/js/plugins/feather.min.js"></script>
+
 </body>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const passwordInput = document.getElementById("password");
+    const passwordError = document.getElementById("passwordError");
+
+    passwordInput.addEventListener("input", function () {
+        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        
+        if (!passwordPattern.test(passwordInput.value)) {
+            passwordError.style.display = "block";
+        } else {
+            passwordError.style.display = "none";
+        }
+    });
+});
+</script>
+
 </html>
