@@ -1,5 +1,4 @@
 <?php
-error_reporting(0);
 session_start();
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
@@ -149,6 +148,10 @@ $username = strtolower(str_replace(' ', '_', $user['name']));
               <img src="../views/includes/Images/brush.svg" alt="" />
               <span>Brush</span>
             </li>
+            <li class="option tool" id="text">
+              <img src="../views/includes/Images/eraser.svg" alt="" />
+              <span>Text</span>
+            </li>
             <li class="option tool" id="eraser">
               <img src="../views/includes/Images/eraser.svg" alt="" />
               <span>Eraser</span>
@@ -171,6 +174,18 @@ $username = strtolower(str_replace(' ', '_', $user['name']));
             </li>
           </ul>
         </div>
+        
+        <input type="color" id="bgColorPicker" value="#ffffff" />
+<label for="bgColorPicker">Background Color</label>
+
+
+        <div class="row">
+  <label class="title">Insert Image</label>
+  <input type="file" id="upload-image" accept="image/*" />
+</div>
+
+      
+
 
         <div class="row buttons">
           <button class="clear-canvas">Clear Canvas</button>
