@@ -1,5 +1,4 @@
 <?php
-error_reporting(0);
 session_start();
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
@@ -159,9 +158,7 @@ $user_role = $_SESSION['user_role'];
             <div class="artwork-list">
                 <?php
                 $artworks = getArtworks($conn);
-                //print_r($artworks);
                 while ($art = $artworks->fetch_assoc()) {
-                    //print_r($art);
                     $imagePath = '../uploads/artworks/' . $art['image'];
 
                     // Fetch the average rating
@@ -196,7 +193,12 @@ $user_role = $_SESSION['user_role'];
                         echo "<button onclick='addToWishlist(" . $art['id'] . ")'>Add to Wishlist</button>";
                         echo "<button onclick='buyArtwork(" . $art['id'] . ")'>Buy Now</button>";
                     }
-                    echo "</div>";
+                    $baseURL = "https://111.111.111.11/uploads/artworks/"; // Change this to your actual domain
+                    $imagePath1 = $baseURL . $art['image'];
+
+                    echo "<button onclick='shareOnWhatsApp(\"" . $imagePath1 . "\")'>Share on WhatsApp</button>";
+
+        echo "</div>";
                 }
                 ?>
             </div>
@@ -209,7 +211,20 @@ $user_role = $_SESSION['user_role'];
             <img id="previewImage" style="width: 100%; height: auto;">
         </div>
     </div>
+    <script>
+function shareOnWhatsApp(imageUrl) {
+    let message = "Check out this amazing artwork! " + imageUrl;
+    let whatsappUrl = "https://web.whatsapp.com/send?text=" + encodeURIComponent(message);
 
+    // Check if the user is on a mobile device
+    if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        whatsappUrl = "https://api.whatsapp.com/send?text=" + encodeURIComponent(message);
+    }
+
+    window.open(whatsappUrl, "_blank");
+}
+
+</script>
     <?php include '../views/includes/footer.php'; ?>
 </body>
 </html>
