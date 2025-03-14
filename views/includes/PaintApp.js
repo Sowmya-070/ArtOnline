@@ -264,9 +264,9 @@ function drawCanvas() {
   // Draw the image at its position
   ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
 
-  // Draw Resize Handle (small red square at bottom-right corner)
-  ctx.fillStyle = "red";
-  ctx.fillRect(imgX + imgWidth - 10, imgY + imgHeight - 10, 10, 10);
+  // // Draw Resize Handle (small red square at bottom-right corner)
+  // ctx.fillStyle = "red";
+  // ctx.fillRect(imgX + imgWidth - 10, imgY + imgHeight - 10, 10, 10);
 }
 
 
