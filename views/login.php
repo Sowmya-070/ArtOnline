@@ -3,10 +3,10 @@
 <html lang="en">
 <head>
     <title>Login | Online Art Studio</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/lrstyle.css">
 </head>
 <body class="auth-main v1">
-    <div class="bg-overlay bg-primary"></div>
+    
     <div class="auth-wrapper">
         <div class="auth-form">
             <div class="card my-5">
@@ -45,11 +45,6 @@
             </div>
         </div>
     </div>
-    <script src="../assets/js/plugins/popper.min.js"></script>
-    <script src="../assets/js/plugins/simplebar.min.js"></script>
-    <script src="../assets/js/plugins/bootstrap.min.js"></script>
-    <script src="../assets/js/fonts/custom-font.js"></script>
-    <script src="../assets/js/pcoded.js"></script>
-    <script src="../assets/js/plugins/feather.min.js"></script>
+   
 </body>
 </html>
