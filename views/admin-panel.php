@@ -54,9 +54,8 @@ include '../controllers/admin.php';
 </head>
 <body>
     <?php include '../views/includes/sidebar.php'; ?>
-    <?php include '../views/includes/topbar.php'; ?>
 
-    <div class="pc-container">
+    <div class="pc-container" id="content">
         <div class="pc-content">
             <h2>Admin Panel</h2>
 

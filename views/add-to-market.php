@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -12,68 +13,15 @@ include '../config/db.php';
 <head>
     <title>Paint App - Online Art Studio</title>
     <link rel="stylesheet" href="../assets/css/style.css">
-    <script src="../paint-app/js/canvas.js"></script>
-    <style>
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            background: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        input, textarea, select, button {
-            width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            font-size: 16px;
-        }
-        button {
-            background: #007bff;
-            color: white;
-            cursor: pointer;
-            border: none;
-        }
-        button:hover {
-            background: #0056b3;
-        }
-        /* Manage Artwork Table */
-        .table-responsive {
-            overflow-x: auto;
-            max-width: 100%;
-            margin-top: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-            white-space: nowrap;
-        }
-        th {
-            background-color: #007bff;
-            color: white;
-        }
-        .btn-edit {
-            background-color: orange;
-        }
-        .btn-delete {
-            background-color: red;
-        }
-    </style>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 <body>
     <?php include '../views/includes/sidebar.php'; ?>
-    <?php include '../views/includes/topbar.php'; ?>
+   
 
-    <div class="pc-container">
+    <div class="content" id="content">
         <div class="pc-content">
             <h2>Add to Marketplace</h2>
 

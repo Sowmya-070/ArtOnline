@@ -14,8 +14,10 @@ $user_role = $_SESSION['user_role'];
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Marketplace - Online Art Studio</title>
+    <title>Dashboard - Online Art Studio</title>
     <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script>
         function previewImage(src) {
             let modal = document.getElementById('imagePreviewModal');
@@ -75,81 +77,12 @@ $user_role = $_SESSION['user_role'];
             });
         }
     </script>
-    <style>
-        .thumbnail {
-            width: 100px;
-            height: auto;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: transform 0.2s;
-        }
-        .thumbnail:hover {
-            transform: scale(1.1);
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.8);
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            max-width: 50%;
-            max-height: 50%;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            background-color: white;
-            padding: 10px;
-        }
-        .artwork-list {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-        .artwork-card {
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            background-color: #fff;
-        }
-        .artwork-card img {
-            width: 100%;
-            height: auto;
-            border-radius: 5px;
-        }
-        .rating {
-            display: flex;
-            justify-content: center;
-            flex-direction: row-reverse;
-            gap: 5px;
-        }
-        .rating input {
-            display: none;
-        }
-        .rating label {
-            font-size: 24px;
-            cursor: pointer;
-            color: gray;
-        }
-        .rating input:checked ~ label,
-        .rating label:hover,
-        .rating label:hover ~ label {
-            color: gold;
-        }
-    </style>
+    
 </head>
 <body>
     <?php include '../views/includes/sidebar.php'; ?>
-    <?php include '../views/includes/topbar.php'; ?>
 
-    <div class="pc-container">
+    <div class="content" id="content">
         <div class="pc-content">
             <h2>Marketplace</h2>
 

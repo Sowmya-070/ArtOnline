@@ -13,7 +13,7 @@ $result = mysqli_query($conn, "SELECT name FROM users WHERE id='$user_id'");
 $user = mysqli_fetch_assoc($result);
 $username = strtolower(str_replace(' ', '_', $user['name']));
 ?>
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -122,7 +122,7 @@ $username = strtolower(str_replace(' ', '_', $user['name']));
         <div class="row">
           <label class="title">Shapes</label>
           <ul class="options">
-            <li class="option tool" id="rectangle">
+             <li class="option tool" id="rectangle"> 
               <img src="../views/includes/Images/rectangle.svg" alt="" />
               <span>Rectangle</span>
             </li>
