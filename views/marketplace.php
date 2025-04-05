@@ -9,6 +9,7 @@ include '../controllers/marketplace.php';
 
 $user_id = $_SESSION['user_id'];
 $user_role = $_SESSION['user_role'];
+
 ?>
 
 <!DOCTYPE html>
@@ -82,15 +83,29 @@ $user_role = $_SESSION['user_role'];
 <body>
     <?php include '../views/includes/sidebar.php'; ?>
 
+   
+
     <div class="content" id="content">
         <div class="pc-content">
             <h2>Marketplace</h2>
 
+            <!-- Search and Filter -->
+            <div class="search-filter">
+                <input type="text" id="searchInput" placeholder="Search artworks..." onkeyup="filterArtworks()">
+                <select id="filterOption" onchange="filterArtworks()">
+                    <option value="all">All</option>
+                    <option value="low">Price: Low to High</option>
+                    <option value="high">Price: High to Low</option>
+                    <option value="rating">Highest Rating</option>
+                </select>
+            </div>
+
             <!-- Display Artwork -->
             <h3>Available Artworks</h3>
-            <div class="artwork-list">
+            <div class="artwork-list" id="artworkList">
                 <?php
                 $artworks = getArtworks($conn);
+                $artworkData = [];
                 while ($art = $artworks->fetch_assoc()) {
                     $imagePath = '../uploads/artworks/' . $art['image'];
 
@@ -99,65 +114,104 @@ $user_role = $_SESSION['user_role'];
                     $ratingResult = mysqli_query($conn, $ratingQuery);
                     $ratingRow = mysqli_fetch_assoc($ratingResult);
                     $avgRating = round($ratingRow['avg_rating'], 1);
-
-                    echo "<div class='artwork-card'>";
-                    echo "<img class='thumbnail' src='" . htmlspecialchars($imagePath) . "' alt='" . htmlspecialchars($art['title']) . "' onclick='previewImage(\"" . htmlspecialchars($imagePath) . "\")'>";
-                    echo "<h4>" . htmlspecialchars($art['title']) . "</h4>";
-                    echo "<p>" . htmlspecialchars($art['description']) . "</p>";
-                    echo "<p>By: " . htmlspecialchars($art['artist_name']) . "</p>";
-                    echo "<p>Price: $" . htmlspecialchars($art['price']) . "</p>";
-
-                    // Display Rating
-                    echo "<p>Average Rating: " . ($avgRating ? $avgRating : "No Ratings Yet") . "</p>";
-
-                    // Rating System (Only buyers can rate)
-                    if ($user_role == 'buyer') {
-                        echo "<div class='rating'>";
-                        for ($i = 5; $i >= 1; $i--) {
-                            echo "<input type='radio' id='star{$i}_{$art['id']}' name='rating_{$art['id']}' value='{$i}'>";
-                            echo "<label for='star{$i}_{$art['id']}'>★</label>";
-                        }
-                        echo "</div>";
-                        echo "<button onclick='submitRating(" . $art['id'] . ")'>Rate</button>";
-                    }
-
-                    // Wishlist & Buy Buttons
-                    if ($user_role == 'buyer') {
-                        echo "<button onclick='addToWishlist(" . $art['id'] . ")'>Add to Wishlist</button>";
-                        echo "<button onclick='buyArtwork(" . $art['id'] . ")'>Buy Now</button>";
-                    }
-                    $baseURL = "https://111.111.111.11/uploads/artworks/"; // Change this to your actual domain
+                    $baseURL = "https://111.111.111.11/uploads/artworks/";
                     $imagePath1 = $baseURL . $art['image'];
-
-                    echo "<button onclick='shareOnWhatsApp(\"" . $imagePath1 . "\")'>Share on WhatsApp</button>";
-
-        echo "</div>";
+                    
+                    $artworkData[] = [
+                        'id' => $art['id'],
+                        'title' => $art['title'],
+                        'description' => $art['description'],
+                        'artist' => $art['artist_name'],
+                        'price' => $art['price'],
+                        'rating' => $avgRating,
+                        'image' => $imagePath,
+                        'shareUrl' => $imagePath1
+                    ];
+                   
                 }
                 ?>
             </div>
         </div>
-    </div>
-
-    <div id="imagePreviewModal" class="modal">
+        <div id="imagePreviewModal" class="modal">
         <span class="close" onclick="closePreview()">&times;</span>
         <div class="modal-content">
             <img id="previewImage" style="width: 100%; height: auto;">
         </div>
     </div>
+    </div>
+
     <script>
-function shareOnWhatsApp(imageUrl) {
-    let message = "Check out this amazing artwork! " + imageUrl;
-    let whatsappUrl = "https://web.whatsapp.com/send?text=" + encodeURIComponent(message);
+        let userRole = "<?php echo $_SESSION['user_role']; ?>";
+        let artworks = <?php echo json_encode($artworkData); ?>;
+                
+        function renderArtworks(data, userRole) {
+    const container = document.getElementById('artworkList');
+    container.innerHTML = '';
 
-    // Check if the user is on a mobile device
-    if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        whatsappUrl = "https://api.whatsapp.com/send?text=" + encodeURIComponent(message);
-    }
+    data.forEach(art => {
+        let card = `<div class='artwork-card'>
+            <img class='thumbnail' src="${art.image}" alt="${art.title}" onclick='previewImage("${art.image}")'>
+            <h4>${art.title}</h4>
+            <p>${art.description}</p>
+            <p>By: ${art.artist}</p>
+            <p>Price: $${art.price}</p>
+            <p>Average Rating: ${art.rating ? art.rating : "No Ratings Yet"}</p>`;
 
-    window.open(whatsappUrl, "_blank");
+        // Rating System (Only buyers can rate)
+        if (userRole === 'buyer') {
+            card += `<div class='rating'>`;
+            for (let i = 5; i >= 1; i--) {
+                card += `<input type='radio' id='star${i}_${art.id}' name='rating_${art.id}' value='${i}'>
+                         <label for='star${i}_${art.id}'>★</label>`;
+            }
+            card += `</div>
+                     <button onclick='submitRating(${art.id})'>Rate</button>`;
+        }
+
+        // Wishlist & Buy Buttons (Only buyers can see)
+        if (userRole === 'buyer') {
+            card += `<button onclick='addToWishlist(${art.id})'>Add to Wishlist</button>
+                     <button onclick='buyArtwork(${art.id})'>Buy Now</button>`;
+        }
+
+        // WhatsApp Share Button
+        card += `<button onclick='shareOnWhatsApp("${art.shareUrl}")'>Share on WhatsApp</button>
+                </div>`;
+
+        container.innerHTML += card;
+    });
 }
 
-</script>
+renderArtworks(artworks, userRole);
+
+        function filterArtworks() {
+            let searchQuery = document.getElementById("searchInput").value.toLowerCase();
+            let filterValue = document.getElementById("filterOption").value;
+            let filteredArtworks = artworks.filter(art => art.title.toLowerCase().includes(searchQuery));
+
+            if (filterValue === "low") {
+                filteredArtworks.sort((a, b) => a.price - b.price);
+            } else if (filterValue === "high") {
+                filteredArtworks.sort((a, b) => b.price - a.price);
+            } else if (filterValue === "rating") {
+                filteredArtworks.sort((a, b) => b.rating - a.rating);
+            }
+            renderArtworks(filteredArtworks);
+        }
+
+        function shareOnWhatsApp(imageUrl) {
+            let message = "Check out this amazing artwork! " + imageUrl;
+            let whatsappUrl = "https://web.whatsapp.com/send?text=" + encodeURIComponent(message);
+
+            // Check if the user is on a mobile device
+            if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                whatsappUrl = "https://api.whatsapp.com/send?text=" + encodeURIComponent(message);
+            }
+
+            window.open(whatsappUrl, "_blank");
+        }
+    </script>
+
     <?php include '../views/includes/footer.php'; ?>
 </body>
 </html>
