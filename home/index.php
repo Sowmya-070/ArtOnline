@@ -106,9 +106,9 @@
 		<div class="footer-copyright">
 			<div class="row">
 				<div class="col-sm-6">
-					<p>
-						&copy; copyrights all rights reserved.
-					</p><!--/p-->
+				<p>
+					&copy; copyright.designed and developed by <a href="https://www.themesine.com/">themesine</a>.
+				</p><!--/p-->
 				</div>
 			</div>
 		</div><!--/.footer-copyright-->
