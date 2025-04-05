@@ -200,6 +200,8 @@ let imgWidth = 200, imgHeight = 150; // Default size
 let isDragging = false, isResizing = false;
 let dragStartX, dragStartY;
 
+let canvasSnapshot; // Store the current canvas state before adding an image
+
 // Handle Image Upload
 uploadImageInput.addEventListener("change", (event) => {
     const file = event.target.files[0];
@@ -210,12 +212,34 @@ uploadImageInput.addEventListener("change", (event) => {
         img.src = e.target.result;
     };
     reader.readAsDataURL(file);
+
+    // Save the current canvas state before adding the image
+    canvasSnapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
 });
 
-// Draw Image on Canvas
+// Draw Image on Canvas without removing previous shapes
 img.onload = () => {
     drawCanvas();
 };
+
+function drawCanvas() {
+
+
+  // Redraw previous canvas state (if available)
+  if (canvasSnapshot) {
+      ctx.putImageData(canvasSnapshot, 0, 0);
+  }
+
+  // Draw image
+  ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+
+  // Redraw brush strokes
+  ctx.beginPath();
+  ctx.strokeStyle = "black";
+  ctx.lineWidth = 2;
+  
+}
+
 
 // Handle Mouse Events for Drag & Resize
 canvas.addEventListener("mousedown", (e) => {
@@ -255,20 +279,6 @@ canvas.addEventListener("mouseup", () => {
     isDragging = false;
     isResizing = false;
 });
-
-function drawCanvas() {
-  // Preserve the background color before clearing the canvas
-  ctx.fillStyle = bgColorPicker.value; // Use the selected background color
-  ctx.fillRect(0, 0, canvas.width, canvas.height); // Redraw background
-
-  // Draw the image at its position
-  ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
-
-  // // Draw Resize Handle (small red square at bottom-right corner)
-  // ctx.fillStyle = "red";
-  // ctx.fillRect(imgX + imgWidth - 10, imgY + imgHeight - 10, 10, 10);
-}
-
 
 
 const bgColorPicker = document.getElementById("bgColorPicker");
