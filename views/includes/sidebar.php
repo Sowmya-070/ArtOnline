@@ -10,6 +10,7 @@
             <li class="pc-item"><a href="create-art.php" class="pc-link">Create Art</a></li>
         <?php } elseif ($_SESSION['user_role'] == 'buyer') { ?>
             <li class="pc-item"><a href="wishlist.php" class="pc-link">Wishlist</a></li>
+                <li class="pc-item"><a href="recommendations.php" class="pc-link">Recommendation</a></li>
         <?php } elseif ($_SESSION['user_role'] == 'admin') { ?>
             <li class="pc-item"><a href="admin-panel.php" class="pc-link">Admin Panel</a></li>
         <?php } ?>
