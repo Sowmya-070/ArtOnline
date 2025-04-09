@@ -66,3 +66,37 @@ Enter the following URL:
 http://localhost/artonline/
 
 Your project should now be accessible.
+
+Citations
+home templates 
+
+https://www.free-css.com/free-css-templates/page296/carvilla
+
+home page styling referred 
+
+https://www.w3schools.com/css/css_templates.asp
+
+create art 
+
+https://youtu.be/y84tBZo8GFo?si=5QCGcE5xF-b4AkV-
+
+
+password validation 
+
+https://regexr.com/
+
+
+w3 school 
+database connect with php
+php ,config ,db.php
+
+https://www.w3schools.com/php/php_mysql_connect.asp
+
+insert value Mysql to php
+
+https://www.w3schools.com/php/php_mysql_insert.asp
+
+
+file uploads 
+
+https://www.w3schools.com/php/php_file_upload.asp
