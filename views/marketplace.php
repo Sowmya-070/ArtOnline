@@ -65,18 +65,18 @@ $user_role = $_SESSION['user_role'];
             });
         }
 
-        function buyArtwork(artwork_id) {
-            fetch('../controllers/purchase.php', {
-                method: 'POST',
-                body: JSON.stringify({ buy: true, artwork_id: artwork_id }),
-                headers: { 'Content-Type': 'application/json' }
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-                if (data.success) location.reload();
-            });
-        }
+        // function buyArtwork(artwork_id) {
+        //     fetch('../controllers/purchase.php', {
+        //         method: 'POST',
+        //         body: JSON.stringify({ buy: true, artwork_id: artwork_id }),
+        //         headers: { 'Content-Type': 'application/json' }
+        //     })
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         alert(data.message);
+        //         if (data.success) location.reload();
+        //     });
+        // }
     </script>
     
 </head>
@@ -171,7 +171,7 @@ $user_role = $_SESSION['user_role'];
         // Wishlist & Buy Buttons (Only buyers can see)
         if (userRole === 'buyer') {
             card += `<button onclick='addToWishlist(${art.id})'>Add to Wishlist</button>
-                     <button onclick='buyArtwork(${art.id})'>Buy Now</button>`;
+                     <button onclick="buyArtwork(${art.id},${art.price})">Buy Now</button>`;
         }
 
         // WhatsApp Share Button
@@ -211,6 +211,54 @@ renderArtworks(artworks, userRole);
             window.open(whatsappUrl, "_blank");
         }
     </script>
+
+<div id="paypalModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000;">
+    <div style="position:relative; margin:10% auto; padding:20px; background:white; width:300px; border-radius:10px;">
+        <span onclick="closeModal()" style="cursor:pointer; position:absolute; top:10px; right:15px; font-weight:bold;">&times;</span>
+        <h3>Complete Payment</h3>
+        <div id="paypal-button-container"></div>
+    </div>
+</div>
+
+
+<script>
+function closeModal() {
+    document.getElementById("paypalModal").style.display = "none";
+    document.getElementById("paypal-button-container").innerHTML = ""; // Clear old button
+}
+
+function buyArtwork(artId,price) {
+
+    document.getElementById("paypalModal").style.display = "block";
+
+    paypal.Buttons({
+        createOrder: function (data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: { value: price }
+                }]
+            });
+        },
+        onApprove: function (data, actions) {
+            return actions.order.capture().then(function (details) {
+                alert('Thank you, ' + details.payer.name.given_name + '!');
+
+                fetch('/process_payment.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        artId: artId,
+                        details: details
+                    })
+                });
+
+                closeModal();
+            });
+        }
+    }).render('#paypal-button-container');
+}
+</script>
+<script src="https://www.paypal.com/sdk/js?client-id=ASDrKPa4C3LAXwwv3jU5teu5U25DEDBdNjAkW1J0WD7gVriycMc4dUGVlwSl-3BwlEfZTTU66fm6HAG1&currency=USD"></script>
 
     <?php include '../views/includes/footer.php'; ?>
 </body>
